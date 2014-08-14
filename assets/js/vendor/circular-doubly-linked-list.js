@@ -22,7 +22,7 @@ CircularDoublyLinkedList = (function() {
     }
 
     CircularDoublyLinkedList.prototype.compare = function(datum1, datum2) {
-        return datum1 - datum2;
+        return datum1 === datum2;
     };
 
     CircularDoublyLinkedList.prototype.insertAll = function(list) {
@@ -40,30 +40,7 @@ CircularDoublyLinkedList = (function() {
     CircularDoublyLinkedList.prototype.insert = function(datum) {
         var current, insertAfter, insertBefore, next, node;
         node = new Node(datum);
-        insertBefore = function(a, b) {
-            if (b === this.head) {
-                a.prev = this.tail;
-                this.head = a;
-                this.tail.next = this.head;
-            } else {
-                a.prev = b.prev;
-                b.prev.next = a;
-            }
-            a.next = b;
-            return b.prev = a;
-        };
-        insertAfter = function(a, b) {
-            if (b === this.tail) {
-                a.next = this.head;
-                this.tail = a;
-                this.head.prev = this.tail;
-            } else {
-                a.next = b.next;
-                b.next.prev = a;
-            }
-            a.prev = b;
-            return b.next = a;
-        };
+
         if (this.head == null) {
             this.head = node;
             this.head.next = node;
@@ -72,11 +49,13 @@ CircularDoublyLinkedList = (function() {
             this.length++;
             return node;
         }
+            this.tail.next = node;
+            this.head.prev = node;
+            node.prev = this.tail;
+            node.next = this.head;
+            this.tail = node;
 
-        insertAfter(node, this.tail);
-
-
-        this.tail = node;
+        //this.tail = node;
 
         this.length++;
         return node;
@@ -85,7 +64,7 @@ CircularDoublyLinkedList = (function() {
     CircularDoublyLinkedList.prototype.remove = function(datum) {
         var current;
         current = this.head;
-        while (this.compare(current.datum, datum) !== 0) {
+        while (!this.compare(current.datum, datum)) {
             current = current.next;
             if (current === this.head) {
                 return;
@@ -102,10 +81,23 @@ CircularDoublyLinkedList = (function() {
             this.tail = current.prev;
             this.head.prev = this.tail;
             this.length--;
-            return this.tail.next = this.head;
+            if (this.length === 0) {
+                this.head = undefined;
+                this.tail = undefined;
+                return undefined;
+            } else {
+                return this.tail.next = this.head;
+
+            }
         } else {
             this.length--;
-            return current.next.prev = current.prev;
+            if (this.length === 0) {
+                this.head = undefined;
+                this.tail = undefined;
+                return undefined;
+            } else {
+                return current.next.prev = current.prev;
+            }
         }
     };
 

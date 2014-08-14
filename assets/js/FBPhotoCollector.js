@@ -1,57 +1,88 @@
 // @codekit-prepend "vendor/jquery.js"
 // @codekit-prepend "vendor/circular-doubly-linked-list.js"
 
-function FBPhotoCollector(fbID) {
-    if (typeof fbID === 'undefined' || typeof fbID === null) {
-        throw new Error("FB ID cannot be " + typeof fbID);
+function FBPhotoCollector(ID) {
+    if (typeof ID === 'undefined' || typeof ID === null) {
+        throw new Error("FB ID cannot be " + typeof ID);
 
     }
-    this.fbID = fbID;
+    this.currPhoto = null;
+    this.source = 'facebook';
+    this.id = ID;
     this.FBPhotoContainer = new CircularDoublyLinkedList();
-    this.photoFeedLink = "https://graph.facebook.com/" + this.fbID + "/photos/uploaded";
+    this.photoFeedLink = "https://graph.facebook.com/" + this.id + "/photos/uploaded";
     this.runCount = 0;
-    this.id = Math.random();
+    this.nothingimportant = Math.random();
     this.done = false;
+    this.disabled = false;
     return this;
 }
 
-FBPhotoCollector.prototype.isEmpty = function(){
-	return this.FBPhotoContainer.length === 0;
+FBPhotoCollector.prototype.getContainer = function() {
+    return this.FBPhotoContainer;
 };
-
-FBPhotoCollector.prototype.collect = function(eachPhotoCallBack, failCallBack, doneCallBack) {
+FBPhotoCollector.prototype.isEmpty = function() {
+    return this.FBPhotoContainer.length === 0;
+};
+/**
+ * collect photo
+ * @param  {function} eachPhotoCallBack function to call for each photo loaded
+ * @param  {function} alwaysCallBack    function to call after each run
+ * @param  {function} doneCallBack      function to call after getting ALL photos
+ * @param  {function} failCallBack      function to call when error
+ * @return {self}                   self
+ */
+FBPhotoCollector.prototype.collect = function(eachPhotoCallBack, alwaysCallBack, doneCallBack, failCallBack) {
     self = this;
-    if (self.photoFeedLink === null || self.runCount > 1) {
-        self.done = true;
-        console.log("done scrapping");
+    if (this.done || this.disabled) {
         if (typeof doneCallBack === 'function') {
-            doneCallBack();
+            doneCallBack(self);
+        }
+        if (typeof alwaysCallBack === 'function') {
+            alwaysCallBack(self);
         }
         return self;
-    } else {
-        $.ajax({
-            url: self.photoFeedLink,
-            type: 'GET',
-            dataType: 'json',
-        }).done(function(data) {
-            $.each(data.data, function(index, val) {
-                self.FBPhotoContainer.insert(val);
-                if (typeof eachPhotoCallBack === 'function') {
-                    eachPhotoCallBack(val);
-                }
-            });
-            self.photoFeedLink = null;
-            if (typeof data.paging !== 'undefined' && typeof data.paging.next === "string" && data.paging.next.length > 0) {
-                self.photoFeedLink = data.paging.next;
-            }
-        }).fail(function(error) {
-            if (typeof failCallBack === 'function') {
-                failCallBack(error);
-            }
-            console.log(error);
-        }).always(function() {
-            console.log("Complete Run #:" + (++self.runCount) + "| Total photos: " + self.FBPhotoContainer.length);
-        });
     }
-    return self;
+    if (self.photoFeedLink === null || self.runCount > 0) {
+        self.done = true;
+        console.log("done scrapping for " + self.id);
+
+        if (typeof doneCallBack === 'function') {
+            doneCallBack(self);
+        }
+        if (typeof alwaysCallBack === 'function') {
+            alwaysCallBack(self);
+        }
+        return self;
+    }
+    $.ajax({
+        url: self.photoFeedLink,
+        type: 'GET',
+        dataType: 'json',
+    }).done(function(data) {
+        $.each(data.data, function(index, val) {
+            self.FBPhotoContainer.insert(val);
+            if (typeof eachPhotoCallBack === 'function') {
+                eachPhotoCallBack(val, self);
+            }
+        });
+        self.photoFeedLink = null;
+        if (typeof data.paging !== 'undefined' && typeof data.paging.next === "string" && data.paging.next.length > 0) {
+            self.photoFeedLink = data.paging.next;
+        }
+    }).fail(function(error) {
+        console.log(error);
+
+        if (typeof failCallBack === 'function') {
+            failCallBack(error, self);
+        }
+    }).always(function() {
+        console.log(self.id + " Complete Run #:" + (++self.runCount) + "| Total photos: " + self.FBPhotoContainer.length);
+
+        if (typeof alwaysCallBack === 'function') {
+            alwaysCallBack(self);
+        }
+        return self;
+    });
+
 };
