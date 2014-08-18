@@ -23,7 +23,7 @@ class Home extends CI_Controller {
 		"title"=>"Photo Viewer",
 		"header_css"=>array(
 				'assets/css/vendor/normalize.css',
-				'assets/css/vendor/bootstrap.css',
+				'assets/css/vendor/bootstrap-paper.min.css',
 				'assets/css/main.css',
 				'assets/css/app.css',
 			),

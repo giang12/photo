@@ -1,5 +1,4 @@
-// @codekit-prepend "vendor/jquery.js"
-// @codekit-prepend "vendor/circular-doubly-linked-list.js"
+//required CircularDoublyLinkedList
 
 function FBPhotoCollector(ID) {
     if (typeof ID === 'undefined' || typeof ID === null) {
