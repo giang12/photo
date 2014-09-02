@@ -17,12 +17,12 @@ var PhotoPopo = (function() {
 
     var MAIN_TIMER;
 
-    var FullScreen = false;
+    var SlideShow = true;
 
     var CONFIG = {
         DEFAULT_TIME: 12000,
         ADJUSTED_TIME: 1000,
-        SLIDESHOW: true,
+        FULLSCREEN: false,
         FROM: {
 
             '102099916530784': {
@@ -37,7 +37,7 @@ var PhotoPopo = (function() {
                 name: 'Earth Porn',
                 source: 'facebook',
                 link: 'https://www.facebook.com/earthporndotus',
-                enabled: false,
+                enabled: true,
             },
             '122067744547121': {
                 id: '122067744547121',
@@ -54,9 +54,7 @@ var PhotoPopo = (function() {
         //container = new FBPhotoCollector('humansofnewyork').collect(insertToPage);
 
         $.each(CONFIG.FROM, function(index, val) {
-            if (val.enabled === false) {
-                return true;
-            }
+
             container.insert(new FBPhotoCollector(val.id));
         });
         MAIN_TIMER = setTimer(2000, nextPhoto);
@@ -67,12 +65,12 @@ var PhotoPopo = (function() {
 
     function load(container) {
 
-        count = container.length;
-        loadHelper(container, null);
+        _count = 0;
+        _loadHelper(container, null);
 
-        function loadHelper(pool, curr) {
-            console.log("loading count: " + count);
-            if (count <= 0) {
+        function _loadHelper(pool, curr) {
+            console.log("loading count: " + _count);
+            if (_count >= container.length) {
                 return;
             }
             if (curr === null)
@@ -81,10 +79,10 @@ var PhotoPopo = (function() {
                 curr = curr.next;
 
             curr.datum.collect(insertToPage, function() {
-                loadHelper(pool, curr); //always callbacks
+                _loadHelper(pool, curr); //always callbacks
             }, function() { //done callbacks
-                count--;
-                loadHelper(pool, curr);
+                _count++;
+                _loadHelper(pool, curr);
             });
         }
 
@@ -108,7 +106,7 @@ var PhotoPopo = (function() {
         if (!isUndefined(fromCollector) && !isUndefined(fromCollector.source)) {
             source = fromCollector.source;
         }
-        htmlString = '<li id="' + photo.id + '" data-source="' + source + '"><span class="slideshow-img'+(FullScreen ? "": " fit ")+'" style="background-image:url(' + imageSource + ')">' + photo.id + '</span><div class="slideshow-caption"><span class="name">' + name + '</span></div></li>';
+        htmlString = '<li id="' + photo.id + '" data-source="' + source + '"><span class="slideshow-img' + (CONFIG.FULLSCREEN ? "" : " fit ") + '" style="background-image:url(' + imageSource + ')">' + photo.id + '</span><div class="slideshow-caption"><span class="name">' + name + '</span></div></li>';
         holder.append(htmlString);
     }
 
@@ -117,15 +115,34 @@ var PhotoPopo = (function() {
      * @param  {[type]} exception [description]
      * @return {[type]}           [description]
      */
-    var currContainer = null;
+    var _currPhotoCollector = null;
 
     function getNextPhotoCollector() {
-        if (isNull(currContainer) || isUndefined(currContainer)) {
-            currContainer = container.head;
-        } else {
-            currContainer = currContainer.next;
+        var __currPhotoCollector_counter = 0;
+
+        function _getNextPhotoCollector_helper() {
+            if (__currPhotoCollector_counter >= container.length) {
+
+                return null;
+            }
+
+            if (isNull(_currPhotoCollector) || isUndefined(_currPhotoCollector)) {
+                _currPhotoCollector = container.head;
+
+            } else {
+                _currPhotoCollector = _currPhotoCollector.next;
+            }
+            if (!CONFIG.FROM[_currPhotoCollector.datum.id].enabled) {
+
+                __currPhotoCollector_counter++;
+                return _getNextPhotoCollector_helper();
+            } else {
+
+                return _currPhotoCollector.datum;
+            }
         }
-        return currContainer.datum;
+
+        return _getNextPhotoCollector_helper();
     }
 
     function jumpToTail() {
@@ -186,12 +203,12 @@ var PhotoPopo = (function() {
             //show success
         } else {
             console.log('none to display');
-            if (CONFIG.SLIDESHOW) {
+            if (SlideShow) {
                 MAIN_TIMER = setTimer(2000, nextPhoto, MAIN_TIMER);
             }
             return;
         }
-        if (CONFIG.SLIDESHOW) {
+        if (SlideShow) {
             MAIN_TIMER = setTimer(calculateTimeRead(currPhoto), nextPhoto, MAIN_TIMER);
         }
     }
@@ -211,7 +228,8 @@ var PhotoPopo = (function() {
             var photoCollector = getNextPhotoCollector();
 
             if (isUndefined(photoCollector) || isNull(photoCollector)) {
-                //every container is disabled 
+                //every container is disabled or all is removed
+                console.log("no container");
 
                 return;
             }
@@ -240,13 +258,13 @@ var PhotoPopo = (function() {
             }
         } else {
             console.log('none to display');
-            if (CONFIG.SLIDESHOW) {
+            if (SlideShow) {
                 MAIN_TIMER = setTimer(2000, nextPhoto, MAIN_TIMER);
             }
             return;
         }
 
-        if (CONFIG.SLIDESHOW) {
+        if (SlideShow) {
             MAIN_TIMER = setTimer(calculateTimeRead(currPhoto), nextPhoto, MAIN_TIMER);
         }
 
@@ -280,7 +298,16 @@ var PhotoPopo = (function() {
         elm.find('.slideshow-caption').animate({
             'opacity': '1'
         }, 800);
-
+        if (photo.datum.link) {
+            $("#CurrPhotoLink").html('Picture Link: <a href=' + photo.datum.link + ' target="_blank">' + photo.datum.id + '</a>');
+        } else {
+            $("#CurrPhotoLink").empty();
+        }
+        if (photo.datum.from) {
+            $("#CurrPhotoFromName").html('From: <a href=http://facebook.com/' + photo.datum.from.id + ' target="_blank">' + photo.datum.from.name + '</a>');
+        } else {
+            $("#CurrPhotoFromName").empty();
+        }
         return true;
     }
 
@@ -309,7 +336,7 @@ var PhotoPopo = (function() {
 
     function slideshowOff() {
         console.log('slideshow off, press spacebar to turn on');
-        CONFIG.SLIDESHOW = false;
+        SlideShow = false;
         if (typeof MAIN_TIMER !== 'undefined' && typeof MAIN_TIMER.clearTimer === 'function') {
             MAIN_TIMER.clearTimer();
         }
@@ -318,7 +345,7 @@ var PhotoPopo = (function() {
 
     function slideshowOn() {
         console.log('spacebar on');
-        CONFIG.SLIDESHOW = true;
+        SlideShow = true;
         nextPhoto();
         return;
     }
@@ -328,15 +355,86 @@ var PhotoPopo = (function() {
      * @return {[true]} iff fullscreen
      */
     function toggleFullScreen() {
-        if (!FullScreen) {
-            FullScreen = true;
+        if (!CONFIG.FULLSCREEN) {
+            CONFIG.FULLSCREEN = true;
             $('.slideshow-img').removeClass('fit');
         } else {
-            FullScreen = false;
+            CONFIG.FULLSCREEN = false;
             $('.slideshow-img').addClass('fit');
         }
-        return FullScreen;
+        return isFullScreen();
 
+    }
+
+    function isFullScreen() {
+        return CONFIG.FULLSCREEN;
+    }
+
+    function getAdjustedTime() {
+        return CONFIG.ADJUSTED_TIME;
+    }
+
+    function setAdjustedTime(time) {
+        if (typeof time === 'number') {
+            CONFIG.ADJUSTED_TIME = time;
+        }
+        return getAdjustedTime();
+    }
+
+    function getFROM() {
+        return CONFIG.FROM;
+    }
+
+    function removeFROM(id) {
+        _count = 0;
+
+        function _removeFROM_helper(pool, curr) {
+            if (_count >= container.length) {
+
+                return false;
+            }
+            if (curr === null) {
+
+                curr = pool.head;
+            } else {
+
+                curr = curr.next;
+            }
+
+            if (curr.datum.id == id) {
+
+                curr.datum.disabled = true;
+                container.remove(curr.datum);
+                delete CONFIG.FROM[id];
+                console.log(id + " removed");
+
+                return true;
+            } else {
+
+                _count++;
+                return _removeFROM_helper(pool, curr);
+            }
+        }
+        return _removeFROM_helper(container, null);
+    }
+
+    function addFROM(id) {
+        console.log(id);
+        return;
+    }
+
+    function toggleFROM(id) {
+        if (typeof CONFIG.FROM[id] !== 'object') {
+            return false;
+        }
+        var obj = CONFIG.FROM[id];
+        obj.enabled = !obj.enabled;
+
+        return true;
+    }
+
+    function saveSetting() {
+        console.log(CONFIG);
     }
     return {
         prevPhoto: prevPhoto,
@@ -348,6 +446,15 @@ var PhotoPopo = (function() {
         slideshowOn: slideshowOn,
         slideshowOff: slideshowOff,
         toggleFullScreen: toggleFullScreen,
+        getAdjustedTime: getAdjustedTime,
+        setAdjustedTime: setAdjustedTime,
+        isFullScreen: isFullScreen,
 
+        containter: container,
+        getFROM: getFROM,
+        addFROM: addFROM,
+        removeFROM: removeFROM,
+        toggleFROM: toggleFROM,
+        saveSetting: saveSetting,
     };
 }).call(this);

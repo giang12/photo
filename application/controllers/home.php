@@ -24,6 +24,8 @@ class Home extends CI_Controller {
 		"header_css"=>array(
 				'assets/css/vendor/normalize.css',
 				'assets/css/vendor/bootstrap-paper.min.css',
+				'assets/css/vendor/font-awesome.min.css',
+				'assets/css/vendor/bootstrap-switch.min.css',
 				'assets/css/main.css',
 				'assets/css/app.css',
 			),

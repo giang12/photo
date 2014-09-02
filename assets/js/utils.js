@@ -1,3 +1,39 @@
+function askConfirm(msg, yes, no) {
+    var html = '<div class="modal confirm-modal" data-backdrop="static">' +
+        '<div class="modal-dialog">' +
+        '<div class="modal-content">' +
+        '<div class="modal-header">' +
+        '<button type="button" class="close confirm-modal-close" aria-hidden="true">×</button>' +
+        '<h4 class="modal-title">Confirm</h4>' +
+        '</div>' +
+        '<div class="modal-body">' +
+        '<p>' + msg + '</p>' +
+        '</div>' +
+        '<div class="modal-footer">' +
+        '<button type="button" class="btn btn-default confirm-modal-close">Cancel</button>' +
+        '<button type="button" class="btn btn-primary confirm-modal-ok">Ok</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+    $('body').append(html);
+    $('.confirm-modal').modal();
+    $('.confirm-modal-close').click(function() {
+            $('.confirm-modal').modal('hide');
+            $('.confirm-modal').remove();
+            if(typeof no === 'function'){
+                no();
+            }
+    });
+    $('.confirm-modal-ok').click(function() {
+            $('.confirm-modal').modal('hide');
+            $('.confirm-modal').remove();
+            if(typeof yes === 'function'){
+                yes();
+            }
+
+    });
+}
 /**
  * test if object is undefined
  * @param  {object}  object object to test
