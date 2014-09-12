@@ -1,9 +1,27 @@
 // @codekit-prepend "vendor/bootstrap-switch.js"
 // @codekit-prepend "vendor/handlebars-v1.3.0.js"
 jQuery(document).ready(function($) {
-    $('#saveSetting').click(function(event) {
-        PhotoPopo.saveSetting();
+
+    $('.control-panel-prev-button').click(function(event) {
+
+        $(".control-panel-resume-button,.resumeMenu").show();
+        PhotoPopo.slideshowOff();
+        PhotoPopo.prevPhoto();
+
     });
+
+    $('.control-panel-next-button').click(function(event) {
+        $(".control-panel-resume-button,.resumeMenu").show();
+        PhotoPopo.slideshowOff();
+        PhotoPopo.nextPhoto();
+
+    });
+    $('.control-panel-resume-button').click(function(event) {
+        
+        $(".control-panel-resume-button,.resumeMenu").hide();
+        PhotoPopo.slideshowOn();
+    });
+
     $('.control-panel-open').click(function(event) {
         $('.control-panel').fadeIn('400');
     }).hover(function() {
@@ -11,11 +29,21 @@ jQuery(document).ready(function($) {
     }, function() {
         $('.control-panel-open').removeClass('fa-spin');
     });
+
     $('.control-panel-close').click(function(event) {
         $('.control-panel').fadeOut('400');
     });
-    $('body').dblclick(function(event) {
-        $('.control-panel').fadeIn('400');
+
+    $('body').hover(function() {
+        /* Stuff to do when the mouse enters the element */
+        $('.control-panel-open').show();
+        $('.control-panel-prev-button').show();
+        $('.control-panel-next-button').show();
+    }, function() {
+        /* Stuff to do when the mouse leaves the element */
+        $('.control-panel-open').hide();
+        $('.control-panel-prev-button').hide();
+        $('.control-panel-next-button').hide();
     });
 
     $("#FullScreen").bootstrapSwitch({
@@ -33,6 +61,12 @@ jQuery(document).ready(function($) {
         }
         elm.val(PhotoPopo.getAdjustedTime() / 1000);
     });
+
+
+    $('#saveSetting').click(function(event) {
+        PhotoPopo.saveSetting();
+    });
+
     renderControlSources();
 
 
@@ -51,7 +85,7 @@ function renderControlSources() {
     $("button[name=remove-btn]").click(function(event) {
         var self = this;
         $(self).addClass('disabled');
-        askConfirm("Do you really want to remove "+$(self).parent().data('name')+"?", function() {
+        askConfirm("Do you really want to remove " + $(self).parent().data('name') + "?", function() {
             //yes
             var result = PhotoPopo.removeFROM($(self).parent().data('id'));
             if (result) {

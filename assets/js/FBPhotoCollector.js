@@ -33,7 +33,7 @@ FBPhotoCollector.prototype.isEmpty = function() {
  */
 FBPhotoCollector.prototype.collect = function(eachPhotoCallBack, alwaysCallBack, doneCallBack, failCallBack) {
     self = this;
-    if (this.done || this.disabled) {
+    if (self.done || self.disabled) {
         if (typeof doneCallBack === 'function') {
             doneCallBack(self);
         }
@@ -42,7 +42,7 @@ FBPhotoCollector.prototype.collect = function(eachPhotoCallBack, alwaysCallBack,
         }
         return self;
     }
-    if (self.photoFeedLink === null || self.runCount > 0) {
+    if (self.photoFeedLink === null) {
         self.done = true;
         console.log("done scrapping for " + self.id);
 

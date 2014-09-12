@@ -8,7 +8,9 @@ jQuery(document).ready(function($) {
             "keys": "cmd right",
             "is_exclusive": false,
             "on_keydown": function() {
+
                 PhotoPopo.slideshowOff();
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.nextPhoto();
             },
         }, {
@@ -16,6 +18,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.nextPhoto();
             },
         }, {
@@ -23,6 +26,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.nextPhoto();
             },
         }, {
@@ -30,6 +34,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.nextPhoto();
             },
         }, {
@@ -37,6 +42,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.nextPhoto();
             },
         }, {
@@ -44,6 +50,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.prevPhoto();
             },
         }, {
@@ -51,6 +58,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.prevPhoto();
             },
         }, {
@@ -58,7 +66,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.prevPhoto();
             },
         }, {
@@ -66,7 +74,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.prevPhoto();
             }
         }, {
@@ -74,7 +82,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.prevPhoto();
             },
         }, {
@@ -82,7 +90,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToTail();
             },
         }, {
@@ -90,7 +98,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToTail();
             },
         }, {
@@ -98,7 +106,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToTail();
             },
         }, {
@@ -106,7 +114,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToTail();
             }
         }, {
@@ -114,7 +122,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToTail();
             },
         }, {
@@ -122,7 +130,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToHead();
             },
         }, {
@@ -130,7 +138,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToHead();
             },
         }, {
@@ -138,7 +146,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToHead();
             },
         }, {
@@ -146,7 +154,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToHead();
             }
         }, {
@@ -154,7 +162,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOff();
-
+                $(".control-panel-resume-button,.resumeMenu").show();
                 PhotoPopo.jumpToHead();
             },
         },{
@@ -162,6 +170,7 @@ jQuery(document).ready(function($) {
             "is_exclusive": false,
             "on_keydown": function() {
                 PhotoPopo.slideshowOn();
+                $(".control-panel-resume-button,.resumeMenu").hide();
             },
         }
 

@@ -49,7 +49,6 @@ var PhotoPopo = (function() {
 
         }
     };
-
     function init() {
         //container = new FBPhotoCollector('humansofnewyork').collect(insertToPage);
 
@@ -57,10 +56,14 @@ var PhotoPopo = (function() {
 
             container.insert(new FBPhotoCollector(val.id));
         });
-        MAIN_TIMER = setTimer(2000, nextPhoto);
+        MAIN_TIMER = setTimer(1000, nextPhoto);
         load(container);
 
 
+    }
+    
+    function _getConfig(){
+        //getting config files;
     }
 
     function load(container) {
@@ -69,10 +72,12 @@ var PhotoPopo = (function() {
         _loadHelper(container, null);
 
         function _loadHelper(pool, curr) {
-            console.log("loading count: " + _count);
+
             if (_count >= container.length) {
                 return;
             }
+            console.log("loading count: " + _count);
+
             if (curr === null)
                 curr = pool.head;
             else
@@ -82,7 +87,6 @@ var PhotoPopo = (function() {
                 _loadHelper(pool, curr); //always callbacks
             }, function() { //done callbacks
                 _count++;
-                _loadHelper(pool, curr);
             });
         }
 
@@ -204,7 +208,7 @@ var PhotoPopo = (function() {
         } else {
             console.log('none to display');
             if (SlideShow) {
-                MAIN_TIMER = setTimer(2000, nextPhoto, MAIN_TIMER);
+                MAIN_TIMER = setTimer(1000, nextPhoto, MAIN_TIMER);
             }
             return;
         }
@@ -259,7 +263,7 @@ var PhotoPopo = (function() {
         } else {
             console.log('none to display');
             if (SlideShow) {
-                MAIN_TIMER = setTimer(2000, nextPhoto, MAIN_TIMER);
+                MAIN_TIMER = setTimer(1000, nextPhoto, MAIN_TIMER);
             }
             return;
         }
@@ -345,8 +349,10 @@ var PhotoPopo = (function() {
 
     function slideshowOn() {
         console.log('spacebar on');
-        SlideShow = true;
-        nextPhoto();
+        if(!SlideShow){
+            SlideShow = true;
+            nextPhoto();
+        }
         return;
     }
 

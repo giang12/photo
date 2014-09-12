@@ -67,18 +67,23 @@ ul{
 .slideshow-container li .slideshow-caption { 
     margin-left: 5%;
     width: 90%;
-    z-index: 100;
+    max-height: 50%;
     position: absolute;
-    bottom: 10px;
+    bottom: 5px;
     left: 0;
+    z-index: 100;
     text-align: center;
     opacity: 0;
     color: #fff;
 }
 .slideshow-container li .slideshow-caption .name { 
-    font-size: 1.5em;
+    font-size: 1em;
     font-family: 'BebasNeueRegular', 'Arial Narrow', Arial, sans-serif;
-    padding: 0;
+    background-color: rgb(0, 0 ,0);
+    background-color: rgba(0, 0, 0, 0.8);
+    padding-left: 5px;
+    padding-right: 5px;
+
 }
 
 /*====================================
@@ -97,6 +102,23 @@ ul{
     text-align: center;
     z-index: 1000;
     overflow: auto;
+}
+.resumeMenu {
+    color: #fff;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    margin-left: -180px;
+    width: 360px;
+    border-radius: 6px;
+    padding: 12px;
+    background-color: rgb(20,20,20);
+    background-color: rgba(20,20,20,0.80);
+    text-align: center;
+    z-index: 1201;
+}
+.resumeMenu, .control-panel-resume-button{
+    display: none;
 }
 .control-panel h1, 
 .control-panel h2,
@@ -117,23 +139,34 @@ ul{
     
 }
 .control-panel-open{
-    float: left;
+    opacity: 0.5;
     position: fixed;
-    bottom: 2%;
-    left: 10px;
+    bottom: 1%;
+    left: 1%;
     z-index: 1000;
-    color: #fff;
+}
+.control-panel-resume-button, .control-panel-prev-button, .control-panel-next-button{
+    opacity: 0.5;
+    position: fixed;
+    top: 50%;
+}
+
+.control-panel-resume-button{
+    left: 50%;
+}
+.control-panel-prev-button{
+    left: 2%;
+}
+.control-panel-next-button{
+    right: 2%;
 }
 .control-panel .control-panel-close{
-    float: right;
     position: fixed;
     top: 11%;
     right: 11%;
 }
-.control-panel .control-panel-close, .control-panel-open:hover{
+.control-panel .control-panel-close, .control-panel-open:hover, .control-panel-prev-button:hover, .control-panel-next-button:hover,.control-panel-resume-button:hover{
     cursor: pointer;
-}
-
-@media screen and (max-width: 600px) { 
-    .slideshow-container li .slideshow-caption .name { font-size: 1em }
+    color: #fff;
+    opacity: 1;
 }
