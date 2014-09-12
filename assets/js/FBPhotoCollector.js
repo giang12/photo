@@ -42,7 +42,7 @@ FBPhotoCollector.prototype.collect = function(eachPhotoCallBack, alwaysCallBack,
         }
         return self;
     }
-    if (self.photoFeedLink === null) {
+    if (self.photoFeedLink === null || self.runCount > 0) {
         self.done = true;
         console.log("done scrapping for " + self.id);
 

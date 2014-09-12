@@ -23,6 +23,7 @@ var PhotoPopo = (function() {
         DEFAULT_TIME: 12000,
         ADJUSTED_TIME: 1000,
         FULLSCREEN: false,
+        CAPTION: true,
         FROM: {
 
             '102099916530784': {
@@ -110,7 +111,7 @@ var PhotoPopo = (function() {
         if (!isUndefined(fromCollector) && !isUndefined(fromCollector.source)) {
             source = fromCollector.source;
         }
-        htmlString = '<li id="' + photo.id + '" data-source="' + source + '"><span class="slideshow-img' + (CONFIG.FULLSCREEN ? "" : " fit ") + '" style="background-image:url(' + imageSource + ')">' + photo.id + '</span><div class="slideshow-caption"><span class="name">' + name + '</span></div></li>';
+        htmlString = '<li id="' + photo.id + '" data-source="' + source + '"><span class="slideshow-img' + (CONFIG.FULLSCREEN ? "" : " fit ") + '" style="background-image:url(' + imageSource + ')">' + photo.id + '</span><div class="slideshow-caption' + (CONFIG.CAPTION ? "" : " hidden ") + '"><span class="name">' + name + '</span></div></li>';
         holder.append(htmlString);
     }
 
@@ -356,6 +357,22 @@ var PhotoPopo = (function() {
         return;
     }
 
+    function toggleCaption() {
+        if (!CONFIG.CAPTION) {
+            CONFIG.CAPTION = true;
+            $('.slideshow-caption').removeClass('hidden');
+        } else {
+            CONFIG.CAPTION = false;
+            $('.slideshow-caption').addClass('hidden');
+        }
+        return isCaption();
+
+    }
+
+    function isCaption() {
+        return CONFIG.CAPTION;
+    }
+
     /**
      * toggleFullScreen
      * @return {[true]} iff fullscreen
@@ -455,6 +472,8 @@ var PhotoPopo = (function() {
         getAdjustedTime: getAdjustedTime,
         setAdjustedTime: setAdjustedTime,
         isFullScreen: isFullScreen,
+        toggleCaption: toggleCaption,
+        isCaption: isCaption,
 
         containter: container,
         getFROM: getFROM,

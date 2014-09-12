@@ -30,6 +30,9 @@
 				FullScreen <input id="FullScreen" type="checkbox" data-size="small">
 			</div>
 			<div class="small-buffer">
+				Caption <input id="Caption" type="checkbox" data-size="small">
+			</div>
+			<div class="small-buffer">
 				ADJUSTED_TIME: <input type="number" id="ADJUSTED_TIME">
 			</div>
 

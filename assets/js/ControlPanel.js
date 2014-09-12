@@ -46,6 +46,12 @@ jQuery(document).ready(function($) {
         $('.control-panel-next-button').hide();
     });
 
+    $("#Caption").bootstrapSwitch({
+        state: PhotoPopo.isCaption()
+    }).on('switchChange.bootstrapSwitch', function(event, state) {
+        PhotoPopo.toggleCaption();
+    });
+
     $("#FullScreen").bootstrapSwitch({
         state: PhotoPopo.isFullScreen()
     }).on('switchChange.bootstrapSwitch', function(event, state) {
