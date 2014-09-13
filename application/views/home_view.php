@@ -23,6 +23,7 @@
 			<div class="divider"></div>
 			<div id="CurrPhotoLink"></div>
 			<div id="CurrPhotoFromName"></div>
+			<div id="CurrPhotoCaption"></div>
 
 			<h5><i class="fa fa-gear"></i> Options </h5>
 			<div class="divider"></div>

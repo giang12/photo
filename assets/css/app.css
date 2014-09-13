@@ -26,6 +26,7 @@ ul{
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
+
 /*====================================
             SLIDE SHOW
 =====================================*/
@@ -67,8 +68,8 @@ ul{
 .slideshow-container li .slideshow-caption { 
     left: 5%;
     width: 90%;
-    max-height: 50%;
-    position: absolute;
+    max-height: 30%;
+    position: fixed;
     bottom: 10px;
     text-align: center;
     opacity: 0;

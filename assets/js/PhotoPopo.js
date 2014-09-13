@@ -351,6 +351,8 @@ var PhotoPopo = (function() {
             $("#CurrPhotoFromName").empty();
         }
 
+        $("#CurrPhotoCaption").html('Caption: <div style="max-height: 150px; overflow-y: auto;">'+ name +'</div>');
+
         return true;
     }
 
