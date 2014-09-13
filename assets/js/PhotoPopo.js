@@ -19,6 +19,8 @@ var PhotoPopo = (function() {
 
     var SlideShow = true;
 
+    var _CAPTION_SIZE = 200; // characters
+
     var CONFIG = {
         DEFAULT_TIME: 12000,
         ADJUSTED_TIME: 1000,
@@ -50,9 +52,15 @@ var PhotoPopo = (function() {
 
         }
     };
+
+    var _haveInit = false;
+
     function init() {
         //container = new FBPhotoCollector('humansofnewyork').collect(insertToPage);
-
+        if (_haveInit) {
+            return;
+        }
+        _haveInit = true;
         $.each(CONFIG.FROM, function(index, val) {
 
             container.insert(new FBPhotoCollector(val.id));
@@ -60,21 +68,29 @@ var PhotoPopo = (function() {
         MAIN_TIMER = setTimer(1000, nextPhoto);
         load(container);
 
-
     }
-    
-    function _getConfig(){
+
+    function _getConfig() {
         //getting config files;
     }
 
+    var _loadRunning = false;
+
     function load(container) {
 
+        if (_loadRunning) {
+            console.log('load is already running, return');
+            return;
+        }
+        console.log('load is already running? ' + _loadRunning);
+        _loadRunning = true;
         _count = 0;
         _loadHelper(container, null);
 
         function _loadHelper(pool, curr) {
 
             if (_count >= container.length) {
+                _loadRunning = false;
                 return;
             }
             console.log("loading count: " + _count);
@@ -91,6 +107,7 @@ var PhotoPopo = (function() {
             });
         }
 
+        return;
     }
 
     /**
@@ -297,12 +314,32 @@ var PhotoPopo = (function() {
         elm = $('#' + photo.datum.id);
 
         elm.addClass('show');
+
         elm.find('.slideshow-img').animate({
             'opacity': '1'
         }, 800);
         elm.find('.slideshow-caption').animate({
             'opacity': '1'
         }, 800);
+
+
+
+        nameElm = $(elm.find('.name'));
+        name = !isUndefined(photo.datum.name) ? photo.datum.name : '';
+        if (name.length <= _CAPTION_SIZE) {
+
+            nameElm.css('font-size', '1.5em');
+            console.log(name.length + ' 1.5em');
+        } else if (name.length <= _CAPTION_SIZE * 2) {
+            nameElm.css('font-size', '1.2em');
+            console.log(name.length + ' 1.2em');
+        } else {
+            nameElm.css('font-size', '1em');
+            console.log(name.length + ' 1em');
+
+        }
+
+
         if (photo.datum.link) {
             $("#CurrPhotoLink").html('Picture Link: <a href=' + photo.datum.link + ' target="_blank">' + photo.datum.id + '</a>');
         } else {
@@ -313,6 +350,7 @@ var PhotoPopo = (function() {
         } else {
             $("#CurrPhotoFromName").empty();
         }
+
         return true;
     }
 
@@ -350,7 +388,7 @@ var PhotoPopo = (function() {
 
     function slideshowOn() {
         console.log('spacebar on');
-        if(!SlideShow){
+        if (!SlideShow) {
             SlideShow = true;
             nextPhoto();
         }
@@ -438,10 +476,17 @@ var PhotoPopo = (function() {
                 return _removeFROM_helper(pool, curr);
             }
         }
-        return _removeFROM_helper(container, null);
+        var _result = _removeFROM_helper(container, null);
+
+        return _result;
     }
 
-    function addFROM(id) {
+    function addFROMS1(id, src) {
+        console.log(id);
+        return;
+    }
+
+    function addFROMS2(id, src) {
         console.log(id);
         return;
     }
@@ -463,7 +508,6 @@ var PhotoPopo = (function() {
         prevPhoto: prevPhoto,
         nextPhoto: nextPhoto,
         init: init,
-        load: load,
         jumpToTail: jumpToTail,
         jumpToHead: jumpToHead,
         slideshowOn: slideshowOn,
@@ -474,12 +518,13 @@ var PhotoPopo = (function() {
         isFullScreen: isFullScreen,
         toggleCaption: toggleCaption,
         isCaption: isCaption,
-
-        containter: container,
         getFROM: getFROM,
-        addFROM: addFROM,
         removeFROM: removeFROM,
         toggleFROM: toggleFROM,
+
+        containter: container,
+        addFROMS1: addFROMS1,
+        addFROMS2: addFROMS2,
         saveSetting: saveSetting,
     };
 }).call(this);

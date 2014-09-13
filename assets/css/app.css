@@ -65,15 +65,14 @@ ul{
     background-size: contain;
 }
 .slideshow-container li .slideshow-caption { 
-    margin-left: 5%;
+    left: 5%;
     width: 90%;
     max-height: 50%;
     position: absolute;
-    bottom: 5px;
-    left: 0;
-    z-index: 100;
+    bottom: 10px;
     text-align: center;
     opacity: 0;
+    z-index: 100;
     color: #fff;
 }
 .slideshow-container li .slideshow-caption .name { 
