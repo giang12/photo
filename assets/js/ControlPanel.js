@@ -1,5 +1,7 @@
 // @codekit-prepend "vendor/bootstrap-switch.js"
 // @codekit-prepend "vendor/handlebars-v1.3.0.js"
+// @codekit-prepend "vendor/screenfull.min.js"
+
 jQuery(document).ready(function($) {
 
     $('.control-panel-prev-button').click(function(event) {
@@ -17,13 +19,14 @@ jQuery(document).ready(function($) {
 
     });
     $('.control-panel-resume-button').click(function(event) {
-        
+
         $(".control-panel-resume-button,.resumeMenu").hide();
         PhotoPopo.slideshowOn();
     });
 
     $('.control-panel-open').click(function(event) {
-        $('.control-panel').fadeIn('400');
+        $('.control-panel').show();
+        $('.control-panel-close').show();
     }).hover(function() {
         $('.control-panel-open').addClass('fa-spin');
     }, function() {
@@ -31,19 +34,36 @@ jQuery(document).ready(function($) {
     });
 
     $('.control-panel-close').click(function(event) {
-        $('.control-panel').fadeOut('400');
+        $('.control-panel').hide();
+        $('.control-panel-close').hide();
     });
+
+    if (screenfull.enabled) {
+        $('.control-panel-fullscreen-button').click(function(event) {
+
+            screenfull.toggle($('body')[0]);
+        });
+        $('body').on(screenfull.raw.fullscreenchange, function(event) {
+            $('.control-panel-fullscreen-button i').toggleClass('fa-expand fa-times');
+        });
+
+    } else {
+        $('.control-panel-fullscreen-button').hide();
+    }
+
 
     $('body').hover(function() {
         /* Stuff to do when the mouse enters the element */
         $('.control-panel-open').show();
         $('.control-panel-prev-button').show();
         $('.control-panel-next-button').show();
+        $('.control-panel-fullscreen-button').show();
     }, function() {
         /* Stuff to do when the mouse leaves the element */
         $('.control-panel-open').hide();
         $('.control-panel-prev-button').hide();
         $('.control-panel-next-button').hide();
+        $('.control-panel-fullscreen-button').hide();
     });
 
     $("#Caption").bootstrapSwitch({
@@ -52,10 +72,10 @@ jQuery(document).ready(function($) {
         PhotoPopo.toggleCaption();
     });
 
-    $("#FullScreen").bootstrapSwitch({
-        state: PhotoPopo.isFullScreen()
+    $("#FullPage").bootstrapSwitch({
+        state: PhotoPopo.isFULLPAGE()
     }).on('switchChange.bootstrapSwitch', function(event, state) {
-        PhotoPopo.toggleFullScreen();
+        PhotoPopo.toggleFULLPAGE();
     });
 
     $("#ADJUSTED_TIME").val(PhotoPopo.getAdjustedTime() / 1000).blur(function(event) {

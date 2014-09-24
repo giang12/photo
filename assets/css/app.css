@@ -160,12 +160,23 @@ ul{
 .control-panel-next-button{
     right: 2%;
 }
-.control-panel .control-panel-close{
+.control-panel-close{
     position: fixed;
     top: 11%;
     right: 11%;
+    z-index: 1001;
 }
-.control-panel .control-panel-close, .control-panel-open:hover, .control-panel-prev-button:hover, .control-panel-next-button:hover,.control-panel-resume-button:hover{
+.control-panel-fullscreen-button{
+    position: fixed;
+    top: 3%;
+    right: 3%;
+}
+.control-panel-close,
+.control-panel-open:hover,
+.control-panel-prev-button:hover,
+.control-panel-next-button:hover,
+.control-panel-resume-button:hover,
+.control-panel-fullscreen-button:hover{
     cursor: pointer;
     color: #fff;
     opacity: 1;

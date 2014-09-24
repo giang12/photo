@@ -24,7 +24,7 @@ var PhotoPopo = (function() {
     var CONFIG = {
         DEFAULT_TIME: 12000,
         ADJUSTED_TIME: 1000,
-        FULLSCREEN: false,
+        FULLPAGE: false,
         CAPTION: true,
         FROM: {
 
@@ -35,18 +35,46 @@ var PhotoPopo = (function() {
                 link: 'https://www.facebook.com/humansofnewyork',
                 enabled: true,
             },
+            '536533713027444': {
+                id: '536533713027444',
+                name: '100WorldKisses',
+                source: 'facebook',
+                link: 'https://www.facebook.com/100WorldKisses',
+                enabled: true
+            },
+            '658036584238559': {
+                id: '658036584238559',
+                name: 'Humans of UW-Madison',
+                source: 'facebook',
+                link: 'https://www.facebook.com/humansofuwmadison',
+                enabled: true
+            },
+            '110335168981694':{
+                id: '110335168981694',
+                name: 'Wandering Earl',
+                source: 'facebook',
+                link: 'https://www.facebook.com/WanderingEarl',
+                enabled: true
+            },
             '295969823862536': {
                 id: '295969823862536',
                 name: 'Earth Porn',
                 source: 'facebook',
                 link: 'https://www.facebook.com/earthporndotus',
-                enabled: true,
+                enabled: false,
             },
             '122067744547121': {
                 id: '122067744547121',
                 name: 'Scarlett Johansson',
                 source: "facebook",
                 link: 'https://www.facebook.com/pages/Scarlett-Johansson/122067744547121',
+                enabled: false,
+            },
+            '135024459931957': {
+                id: '135024459931957',
+                name: 'The Fluffington Post',
+                source: "facebook",
+                link: 'https://www.facebook.com/thefluffingtonpost',
                 enabled: false,
             }
 
@@ -128,7 +156,7 @@ var PhotoPopo = (function() {
         if (!isUndefined(fromCollector) && !isUndefined(fromCollector.source)) {
             source = fromCollector.source;
         }
-        htmlString = '<li id="' + photo.id + '" data-source="' + source + '"><span class="slideshow-img' + (CONFIG.FULLSCREEN ? "" : " fit ") + '" style="background-image:url(' + imageSource + ')">' + photo.id + '</span><div class="slideshow-caption' + (CONFIG.CAPTION ? "" : " hidden ") + '"><span class="name">' + name + '</span></div></li>';
+        htmlString = '<li id="' + photo.id + '" data-source="' + source + '"><span class="slideshow-img' + (CONFIG.FULLPAGE ? "" : " fit ") + '" style="background-image:url(' + imageSource + ')">' + photo.id + '</span><div class="slideshow-caption' + (CONFIG.CAPTION ? "" : " hidden ") + '"><span class="name">' + name + '</span></div></li>';
         holder.append(htmlString);
     }
 
@@ -414,23 +442,23 @@ var PhotoPopo = (function() {
     }
 
     /**
-     * toggleFullScreen
-     * @return {[true]} iff fullscreen
+     * toggleFULLPAGE
+     * @return {[true]} iff FULLPAGE
      */
-    function toggleFullScreen() {
-        if (!CONFIG.FULLSCREEN) {
-            CONFIG.FULLSCREEN = true;
+    function toggleFULLPAGE() {
+        if (!CONFIG.FULLPAGE) {
+            CONFIG.FULLPAGE = true;
             $('.slideshow-img').removeClass('fit');
         } else {
-            CONFIG.FULLSCREEN = false;
+            CONFIG.FULLPAGE = false;
             $('.slideshow-img').addClass('fit');
         }
-        return isFullScreen();
+        return isFULLPAGE();
 
     }
 
-    function isFullScreen() {
-        return CONFIG.FULLSCREEN;
+    function isFULLPAGE() {
+        return CONFIG.FULLPAGE;
     }
 
     function getAdjustedTime() {
@@ -514,10 +542,10 @@ var PhotoPopo = (function() {
         jumpToHead: jumpToHead,
         slideshowOn: slideshowOn,
         slideshowOff: slideshowOff,
-        toggleFullScreen: toggleFullScreen,
+        toggleFULLPAGE: toggleFULLPAGE,
+        isFULLPAGE: isFULLPAGE,
         getAdjustedTime: getAdjustedTime,
         setAdjustedTime: setAdjustedTime,
-        isFullScreen: isFullScreen,
         toggleCaption: toggleCaption,
         isCaption: isCaption,
         getFROM: getFROM,

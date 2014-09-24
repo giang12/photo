@@ -2,6 +2,7 @@
 <ul class="slideshow-container"></ul>
 </div>
 
+<span class="control-panel-fullscreen-button"><i class="fa fa-expand fa-2x"></i></span>
 
 <span class="control-panel-prev-button"><i class="fa fa-chevron-left fa-5x"></i></span>
 
@@ -12,9 +13,9 @@
 <div class="resumeMenu ">Click <i class="fa fa-play"></i> or Press the <strong>Space Bar</strong> to resume slideshow</div>
 
 <span class="control-panel-open"><i class="fa fa-cogs fa-2x"></i></span>
+<span class="control-panel-close"><i class="fa fa-times fa-2x"></i></span>
 
 <div class=" container-fluid control-panel">
-	<span class="control-panel-close"><i class="fa fa-times fa-2x"></i></span>
 	<h2> Control Panel </h2>
 	<div class="row">
 		<div class="col-md-6 small-buffer">
@@ -28,7 +29,7 @@
 			<h5><i class="fa fa-gear"></i> Options </h5>
 			<div class="divider"></div>
 			<div class="small-buffer">
-				FullScreen <input id="FullScreen" type="checkbox" data-size="small">
+				Full Page <input id="FullPage" type="checkbox" data-size="small">
 			</div>
 			<div class="small-buffer">
 				Caption <input id="Caption" type="checkbox" data-size="small">
