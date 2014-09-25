@@ -49,7 +49,7 @@ var PhotoPopo = (function() {
                 link: 'https://www.facebook.com/humansofuwmadison',
                 enabled: true
             },
-            '110335168981694':{
+            '110335168981694': {
                 id: '110335168981694',
                 name: 'Wandering Earl',
                 source: 'facebook',
@@ -182,7 +182,8 @@ var PhotoPopo = (function() {
             } else {
                 _currPhotoCollector = _currPhotoCollector.next;
             }
-            if (!CONFIG.FROM[_currPhotoCollector.datum.id].enabled) {
+
+            if (!CONFIG.FROM[_currPhotoCollector.datum.id].enabled){
 
                 __currPhotoCollector_counter++;
                 return _getNextPhotoCollector_helper();
@@ -309,7 +310,7 @@ var PhotoPopo = (function() {
         } else {
             console.log('none to display');
             if (SlideShow) {
-                MAIN_TIMER = setTimer(1000, nextPhoto, MAIN_TIMER);
+                MAIN_TIMER = setTimer(250, nextPhoto, MAIN_TIMER);
             }
             return;
         }
@@ -379,7 +380,7 @@ var PhotoPopo = (function() {
             $("#CurrPhotoFromName").empty();
         }
 
-        $("#CurrPhotoCaption").html('Caption: <div style="max-height: 150px; overflow-y: auto;">'+ name +'</div>');
+        $("#CurrPhotoCaption").html('Caption: <div style="max-height: 150px; overflow-y: auto;">' + name + '</div>');
 
         return true;
     }

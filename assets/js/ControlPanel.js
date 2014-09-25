@@ -37,8 +37,8 @@ jQuery(document).ready(function($) {
         $('.control-panel').hide();
         $('.control-panel-close').hide();
     });
-
-    if (screenfull.enabled) {
+    
+    if (screenfull.enabled && device.desktop()) {
         $('.control-panel-fullscreen-button').click(function(event) {
 
             screenfull.toggle($('body')[0]);
@@ -57,7 +57,9 @@ jQuery(document).ready(function($) {
         $('.control-panel-open').show();
         $('.control-panel-prev-button').show();
         $('.control-panel-next-button').show();
-        $('.control-panel-fullscreen-button').show();
+        if((screenfull.enabled && device.desktop())){
+            $('.control-panel-fullscreen-button').show();
+        }
     }, function() {
         /* Stuff to do when the mouse leaves the element */
         $('.control-panel-open').hide();
