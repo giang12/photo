@@ -519,6 +519,9 @@ var PhotoPopo = (function() {
                 curr.datum.disabled = true;
                 container.remove(curr.datum);
                 delete CONFIG.FROM[id];
+                if(container.length < 1){
+                    _currPhotoCollector = null; //reset, to avoid stuck in removed circular object
+                }
                 console.log(id + " removed");
 
                 return true;

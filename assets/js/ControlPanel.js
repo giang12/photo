@@ -101,8 +101,8 @@ var ControlPanel = (function() {
         });
 
         $("#ADJUSTED_TIME").val(PhotoPopo.getAdjustedTime() / 1000).blur(function(event) {
-            elm = $(this);
-            time = elm.val();
+            var elm = $(this);
+            var time = elm.val();
             if ($.isNumeric(time)) {
                 time *= 1000;
                 PhotoPopo.setAdjustedTime(time);
