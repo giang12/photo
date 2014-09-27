@@ -27,6 +27,11 @@ ul{
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.control-panel #ADD_SOURCE{
+    color: #fff;
+    display: inline-block;
+    width: 50%;
+}
 /*====================================
             SLIDE SHOW
 =====================================*/

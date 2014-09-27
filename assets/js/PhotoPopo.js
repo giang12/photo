@@ -5,6 +5,9 @@
 //required jquery and utils.js
 
 var PhotoPopo = (function() {
+
+    'use strict';
+
     var container = new CircularDoublyLinkedList();
 
     var timeline = new DoublyLinkedList();
@@ -21,64 +24,14 @@ var PhotoPopo = (function() {
 
     var _CAPTION_SIZE = 200; // characters
 
+    var isRunning = true;
+
     var CONFIG = {
         DEFAULT_TIME: 12000,
         ADJUSTED_TIME: 1000,
         FULLPAGE: false,
         CAPTION: true,
-        FROM: {
-
-            '102099916530784': {
-                id: '102099916530784',
-                name: 'Humans of New York',
-                source: 'facebook',
-                link: 'https://www.facebook.com/humansofnewyork',
-                enabled: true,
-            },
-            '536533713027444': {
-                id: '536533713027444',
-                name: '100WorldKisses',
-                source: 'facebook',
-                link: 'https://www.facebook.com/100WorldKisses',
-                enabled: true
-            },
-            '658036584238559': {
-                id: '658036584238559',
-                name: 'Humans of UW-Madison',
-                source: 'facebook',
-                link: 'https://www.facebook.com/humansofuwmadison',
-                enabled: true
-            },
-            '110335168981694': {
-                id: '110335168981694',
-                name: 'Wandering Earl',
-                source: 'facebook',
-                link: 'https://www.facebook.com/WanderingEarl',
-                enabled: true
-            },
-            '295969823862536': {
-                id: '295969823862536',
-                name: 'Earth Porn',
-                source: 'facebook',
-                link: 'https://www.facebook.com/earthporndotus',
-                enabled: false,
-            },
-            '122067744547121': {
-                id: '122067744547121',
-                name: 'Scarlett Johansson',
-                source: "facebook",
-                link: 'https://www.facebook.com/pages/Scarlett-Johansson/122067744547121',
-                enabled: false,
-            },
-            '135024459931957': {
-                id: '135024459931957',
-                name: 'The Fluffington Post',
-                source: "facebook",
-                link: 'https://www.facebook.com/thefluffingtonpost',
-                enabled: false,
-            }
-
-        }
+        FROM: {}
     };
 
     var _haveInit = false;
@@ -89,17 +42,81 @@ var PhotoPopo = (function() {
             return;
         }
         _haveInit = true;
+
+        _getConfig();
+
         $.each(CONFIG.FROM, function(index, val) {
 
             container.insert(new FBPhotoCollector(val.id));
         });
         MAIN_TIMER = setTimer(1000, nextPhoto);
+
         load(container);
+
+        ControlPanel.init();
 
     }
 
     function _getConfig() {
         //getting config files;
+        if (isNull(localStorage.getItem('config'))) {
+
+
+            CONFIG = {
+                DEFAULT_TIME: 12000,
+                ADJUSTED_TIME: 1000,
+                FULLPAGE: false,
+                CAPTION: true,
+                FROM: {
+
+                    '102099916530784': {
+                        id: '102099916530784',
+                        name: 'Humans of New York',
+                        source: 'facebook',
+                        link: 'https://www.facebook.com/humansofnewyork',
+                        enabled: true,
+                    },
+                    '536533713027444': {
+                        id: '536533713027444',
+                        name: '100WorldKisses',
+                        source: 'facebook',
+                        link: 'https://www.facebook.com/100WorldKisses',
+                        enabled: true
+                    },
+                    '434849653264439': {
+                        id: '434849653264439',
+                        name: 'Portraits of America',
+                        source: 'facebook',
+                        link: 'https://www.facebook.com/portraitsofamerica',
+                        enabled: true,
+                    },
+                    '658036584238559': {
+                        id: '658036584238559',
+                        name: 'Humans of UW-Madison',
+                        source: 'facebook',
+                        link: 'https://www.facebook.com/humansofuwmadison',
+                        enabled: true
+                    },
+                    '110335168981694': {
+                        id: '110335168981694',
+                        name: 'Wandering Earl',
+                        source: 'facebook',
+                        link: 'https://www.facebook.com/WanderingEarl',
+                        enabled: true
+                    },
+                    '295969823862536': {
+                        id: '295969823862536',
+                        name: 'Earth Porn',
+                        source: 'facebook',
+                        link: 'https://www.facebook.com/earthporndotus',
+                        enabled: false,
+                    }
+
+                }
+            };
+        } else {
+            CONFIG = JSON.parse(localStorage.getItem('config'));
+        }
     }
 
     var _loadRunning = false;
@@ -112,7 +129,7 @@ var PhotoPopo = (function() {
         }
         console.log('load is already running? ' + _loadRunning);
         _loadRunning = true;
-        _count = 0;
+        var _count = 0;
         _loadHelper(container, null);
 
         function _loadHelper(pool, curr) {
@@ -150,13 +167,13 @@ var PhotoPopo = (function() {
             console.log('photo already exist');
             return;
         }
-        imageSource = (!isUndefined(photo.images) && photo.images.length > 0) ? photo.images[0].source : '';
+        var imageSource = (!isUndefined(photo.images) && photo.images.length > 0) ? photo.images[0].source : '';
         name = !isUndefined(photo.name) ? photo.name : '';
-        source = "";
+        var source = "";
         if (!isUndefined(fromCollector) && !isUndefined(fromCollector.source)) {
             source = fromCollector.source;
         }
-        htmlString = '<li id="' + photo.id + '" data-source="' + source + '"><span class="slideshow-img' + (CONFIG.FULLPAGE ? "" : " fit ") + '" style="background-image:url(' + imageSource + ')">' + photo.id + '</span><div class="slideshow-caption' + (CONFIG.CAPTION ? "" : " hidden ") + '"><span class="name">' + name + '</span></div></li>';
+        var htmlString = '<li id="' + photo.id + '" data-source="' + source + '"><span class="slideshow-img' + (CONFIG.FULLPAGE ? "" : " fit ") + '" style="background-image:url(' + imageSource + ')">' + photo.id + '</span><div class="slideshow-caption' + (CONFIG.CAPTION ? "" : " hidden ") + '">' + (name === "" ? "" : '<span class="name">' + name + '</span></div></li>');
         holder.append(htmlString);
     }
 
@@ -183,7 +200,7 @@ var PhotoPopo = (function() {
                 _currPhotoCollector = _currPhotoCollector.next;
             }
 
-            if (!CONFIG.FROM[_currPhotoCollector.datum.id].enabled){
+            if (isUndefined(CONFIG.FROM[_currPhotoCollector.datum.id]) || isNull(CONFIG.FROM[_currPhotoCollector.datum.id]) || !CONFIG.FROM[_currPhotoCollector.datum.id].enabled) {
 
                 __currPhotoCollector_counter++;
                 return _getNextPhotoCollector_helper();
@@ -266,6 +283,8 @@ var PhotoPopo = (function() {
 
     function nextPhoto() {
 
+        isRunning = true;
+
         var photoToHide = currPhoto; //cache prevToHide
         var newPhoto = false;
         if (!isNull(timelinePointer) && !isUndefined(timelinePointer) && !isUndefined(timelinePointer.next) && !isNull(timelinePointer.next)) {
@@ -281,6 +300,8 @@ var PhotoPopo = (function() {
             if (isUndefined(photoCollector) || isNull(photoCollector)) {
                 //every container is disabled or all is removed
                 console.log("no container");
+
+                isRunning = false;
 
                 return;
             }
@@ -322,7 +343,7 @@ var PhotoPopo = (function() {
     }
 
     function calculateTimeRead(photo) {
-        time = -1;
+        var time = -1;
         if (photo.datum.name) {
             time = photo.datum.name.length * 35 + CONFIG.ADJUSTED_TIME;
         }
@@ -340,7 +361,7 @@ var PhotoPopo = (function() {
             return false;
         }
 
-        elm = $('#' + photo.datum.id);
+        var elm = $('#' + photo.datum.id);
 
         elm.addClass('show');
 
@@ -353,7 +374,7 @@ var PhotoPopo = (function() {
 
 
 
-        nameElm = $(elm.find('.name'));
+        var nameElm = $(elm.find('.name'));
         name = !isUndefined(photo.datum.name) ? photo.datum.name : '';
         if (name.length <= _CAPTION_SIZE) {
 
@@ -395,7 +416,7 @@ var PhotoPopo = (function() {
             return false;
         }
 
-        elm = $('#' + photo.datum.id);
+        var elm = $('#' + photo.datum.id);
 
         elm.removeClass('show');
         elm.find('.slideshow-img').animate({
@@ -478,7 +499,7 @@ var PhotoPopo = (function() {
     }
 
     function removeFROM(id) {
-        _count = 0;
+        var _count = 0;
 
         function _removeFROM_helper(pool, curr) {
             if (_count >= container.length) {
@@ -512,14 +533,147 @@ var PhotoPopo = (function() {
         return _result;
     }
 
-    function addFROMS1(id, src) {
-        console.log(id);
-        return;
+    function addSource(id, src, success, fail) {
+
+        console.log(id + src);
+
+        function s(srcObj) {
+            load(container);
+
+            if (!isRunning) {
+                nextPhoto();
+            }
+            if (typeof success === 'function') {
+
+                success(srcObj);
+            }
+        }
+
+        switch (src) {
+            case "facebook":
+            case "fb":
+                _addFromFaceBook(id, s, fail);
+                break;
+            default:
+                if (typeof fail === 'function') {
+
+                    fail("Source Not Regcognized");
+                }
+                return;
+        }
     }
 
-    function addFROMS2(id, src) {
-        console.log(id);
-        return;
+    /**
+     * test if source has photo
+     * @param  {[type]} id [description]
+     * @return {[boolean]}    true or false
+     */
+    function _testSourceFromFaceBook(id, callback) {
+
+        $.ajax({
+            url: 'https://graph.facebook.com/' + id + '/photos/uploaded',
+            type: 'GET',
+            asyn: false,
+            success: function(data) {
+                if (data.data.length < 1) {
+                    console.log(data.data.length);
+                    if (typeof callback === 'function') {
+                        callback(false);
+                    }
+                    return false;
+                } else {
+                    if (typeof callback === 'function') {
+                        callback(true);
+                    }
+                }
+
+            }
+        });
+    }
+
+    function _addFromFaceBook(id, success, fail) {
+
+        console.log('add from facebook for id + "' + id + '"');
+
+        if (id.length < 1) {
+
+            console.log('add empty');
+            if (typeof fail === 'function') {
+
+                fail("ID Cannot Be Blank");
+            }
+            return;
+        }
+
+        var srcObj = {
+            id: '',
+            name: '',
+            source: 'facebook',
+            link: '',
+            enabled: true,
+        };
+
+        $.ajax({
+            url: 'http://graph.facebook.com/?metadata=1&id=' + id,
+            type: 'GET',
+            success: function(data) {
+
+                srcObj.name = data['name'];
+                srcObj.id = data['id'];
+                srcObj.link = data['link'];
+
+                _testSourceFromFaceBook(srcObj.id, function(hasPhoto) {
+                    if (!hasPhoto) {
+                        askConfirm(srcObj.name + " does not have any public photos. Add anyway?",
+                            function() {
+                                //yes
+                                getFROM()[srcObj.id] = srcObj;
+
+                                container.insert(new FBPhotoCollector(srcObj.id));
+
+                                if (typeof success === 'function') {
+
+                                    success(getFROM()[srcObj.id]);
+                                }
+
+                            }, function() {
+                                //no
+                                if (typeof success === 'function') {
+
+                                    success(null);
+                                }
+                                return;
+                            });
+
+                    } else {
+                        getFROM()[srcObj.id] = srcObj;
+
+                        container.insert(new FBPhotoCollector(srcObj.id));
+
+                        if (typeof success === 'function') {
+
+                            success(getFROM()[srcObj.id]);
+                        }
+
+                    }
+
+                });
+
+
+            },
+            error: function(data) {
+
+                var object = eval("(" + data['responseText'] + ")");
+
+                console.log(object['error']['code'] + ": " + object['error']['message']);
+
+                if (typeof fail === 'function') {
+
+                    fail("The alias you requested does not exist: " + id);
+                }
+            },
+            dataType: "json"
+        });
     }
 
     function toggleFROM(id) {
@@ -529,11 +683,15 @@ var PhotoPopo = (function() {
         var obj = CONFIG.FROM[id];
         obj.enabled = !obj.enabled;
 
+        if (!isRunning) {
+            nextPhoto();
+        }
         return true;
     }
 
     function saveSetting() {
         console.log(CONFIG);
+        localStorage.setItem("config", JSON.stringify(CONFIG));
     }
     return {
         prevPhoto: prevPhoto,
@@ -554,8 +712,8 @@ var PhotoPopo = (function() {
         toggleFROM: toggleFROM,
 
         containter: container,
-        addFROMS1: addFROMS1,
-        addFROMS2: addFROMS2,
+        addSource: addSource,
         saveSetting: saveSetting,
     };
+
 }).call(this);
