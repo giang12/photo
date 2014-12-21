@@ -5,6 +5,7 @@ Slideshow of photos from different sources
 =====
 Side Project I started from the desire of having "pretty" photos slideshow on my TV while I'm stuyding instead of just looking at those dull images from chromecast
 
+** Most of the interesting stuff is in assets/js/ folder, github statistic is "misleading" >.<" **
 TO DO:
 =====
 * Add Comments damnit so you know what's going on after 2 months, instead of having to reread the entire application you monkey
