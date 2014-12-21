@@ -82,8 +82,15 @@ var PhotoPopo = (function() {
         _getConfig();
 
         $.each(CONFIG.FROM, function(index, val) {
+            switch(val.source){
+                case "facebook":
+                case "fb":
+                    container.insert(new FBPhotoCollector(val.id));
+                    break;
+                default:
+                    console.log("sr mate source not recognized");
 
-            container.insert(new FBPhotoCollector(val.id));
+            }
         });
 
         /**

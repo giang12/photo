@@ -8,6 +8,7 @@ Side Project I started from the desire of having "pretty" photos slideshow on my
 TO DO:
 =====
 * Add Comments damnit so you know what's going on after 2 months, instead of having to reread the entire application you monkey
+* Add auto push from github to stage
 * Dynamic Like Button -> on it
 * Fix removeFrom function (* _currPhotoPointer *)
 * Hide UI Controller (next, prev button, etc) if mouse doesnt move for more than X threshhold seconds
