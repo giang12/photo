@@ -36,7 +36,7 @@
      * @return {self}                   self
      */
     FBPhotoCollector.prototype.collect = function(eachPhotoCallBack, alwaysCallBack, doneCallBack, failCallBack) {
-        self = this;
+        var self = this;
         if (self.done || self.disabled) {
             if (typeof doneCallBack === 'function') {
                 doneCallBack(self);

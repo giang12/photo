@@ -4,28 +4,63 @@
 
 //required jquery and utils.js
 
+/**
+ * This is a singleton app controller/policing the app, hence the name :D
+ * Uses circular doubly linked list as a PhotoCollectors container
+ * Uses doubly linked list to implement photos history/timeline
+ * @return public functions
+ */
 var PhotoPopo = (function() {
 
     'use strict';
 
+    /* container for PhotoCollectors for each source */
     var container = new CircularDoublyLinkedList();
 
+    /* history/timeline of photos presented , used for prev photos,etc */
     var timeline = new DoublyLinkedList();
 
+    /* used to indicate where in history we are at, null if we are at most current photo */
     var timelinePointer = null;
 
+    /* Photo object of the currently presented photo */
     var currPhoto = null;
 
     var holder = $('.slideshow-container');
 
+    /* Main timer for slideshow */
     var MAIN_TIMER;
 
     var SlideShow = true;
 
+    /* used to quick and dirty adjust font size for caption */
     var _CAPTION_SIZE = 200; // characters
 
+    /**
+     * app status
+     * @type {Boolean}
+     * false -> no photos to show, no sources enabled
+     * true -> there are photos to show <3
+     *
+     * cough cough, even if slideshow is stopped, app may still be running, dont get confused:D
+     */
     var isRunning = true;
 
+    /**
+     * app config
+     * DEFAULT_TIME: to show next photo (in ms), set by app, doesnt change
+     * ADJUSTED_TIME: time added to DEFAULT_TIME for individual setting, change by user
+     * FROM: JSON object contains info for each photo source, e.g
+     *  {
+     *      '102099916530784': {
+     *          id: '102099916530784',
+     *          name: 'Humans of New York',
+     *          source: 'facebook',
+     *          link: 'https://www.facebook.com/humansofnewyork',
+     *          enabled: true,
+     *      }
+     *  }
+     */
     var CONFIG = {
         DEFAULT_TIME: 12000,
         ADJUSTED_TIME: 1000,
@@ -34,6 +69,7 @@ var PhotoPopo = (function() {
         FROM: {}
     };
 
+    /* make sure only 1 instance running */
     var _haveInit = false;
 
     function init() {
@@ -49,18 +85,29 @@ var PhotoPopo = (function() {
 
             container.insert(new FBPhotoCollector(val.id));
         });
+
+        /**
+         * initially wait 1s then attempt to load initial photo, due to latency of loading first photo
+         * Possible improvement: implement custom event "has photo, go ahead mate"
+         * then add custom event handler to start slideshow
+         */
         MAIN_TIMER = setTimer(1000, nextPhoto);
 
+        /* start lazy loading photos from different sources */
         load(container);
 
+        /* init main UI controller interface */
         ControlPanel.init();
 
     }
 
+    /**
+     * get unique user config and set app config based on that
+     */
     function _getConfig() {
-        //getting config files;
+        //using local storage for now
+        //TODO: ajax loading from server when authentication is implemented
         if (isNull(localStorage.getItem('config'))) {
-
 
             CONFIG = {
                 DEFAULT_TIME: 12000,
@@ -119,6 +166,7 @@ var PhotoPopo = (function() {
         }
     }
 
+    /* make sure only 1 loading worker is running to avoid duplicate */
     var _loadRunning = false;
 
     function load(container) {
@@ -127,11 +175,23 @@ var PhotoPopo = (function() {
             console.log('load is already running, return');
             return;
         }
+
         console.log('load is already running? ' + _loadRunning);
+        
         _loadRunning = true;
+        
+        /* indicate number of sources where all photos from those sources have been loaded */
         var _count = 0;
+        
         _loadHelper(container, null);
 
+        /**
+         * loader helper called recursively to load from 1 source at a time to avoid hogging up connection,
+         * especially on mobile devices
+         * @param  {[container]} pool [a pool of PhotoCollector objects to collect photos from]
+         * @param  {PhotoCollector} curr [current PhotoCollector, location within the pool]
+         * @return {nothing}      nothing
+         */
         function _loadHelper(pool, curr) {
 
             if (_count >= container.length) {
@@ -145,9 +205,12 @@ var PhotoPopo = (function() {
             else
                 curr = curr.next;
 
+            /* curr is a node within circularly double linked list container, curr.datum->PhotoCollector */
             curr.datum.collect(insertToPage, function() {
+                /* when done loading a batch of photos from 1 source, move on next */
                 _loadHelper(pool, curr); //always callbacks
             }, function() { //done callbacks
+                /* increment count when all photo from a source have been loaded */
                 _count++;
             });
         }
@@ -156,9 +219,9 @@ var PhotoPopo = (function() {
     }
 
     /**
-     * object containing the photo info
-     * @param  {object} photo photo object
-     * @param  {object} object collector the collector the photo come from
+     * insert each photo to page, handed to each PhotoCollector to use
+     * @param  {object} photo [photo object]
+     * @param  {object} PhotoCollector [where the photo come from]
      * @return {void}       void
      */
     function insertToPage(photo, fromCollector) {
@@ -167,8 +230,11 @@ var PhotoPopo = (function() {
             console.log('photo already exist');
             return;
         }
+        /* link of the photo */
         var imageSource = (!isUndefined(photo.images) && photo.images.length > 0) ? photo.images[0].source : '';
-        name = !isUndefined(photo.name) ? photo.name : '';
+        
+        /* photo caption */
+        var name = !isUndefined(photo.name) ? photo.name : '';
         var source = "";
         if (!isUndefined(fromCollector) && !isUndefined(fromCollector.source)) {
             source = fromCollector.source;
@@ -178,9 +244,10 @@ var PhotoPopo = (function() {
     }
 
     /**
-     * get a container
-     * @param  {[type]} exception [description]
-     * @return {[type]}           [description]
+     * get an enabled PhotoCollector
+     * 
+     * @return {[null]}           [if there is no PhotoCollector enabled]
+     * @return {[PhotoCollector]} [an enabled PhotoCollector]
      */
     var _currPhotoCollector = null;
 
@@ -519,9 +586,10 @@ var PhotoPopo = (function() {
                 curr.datum.disabled = true;
                 container.remove(curr.datum);
                 delete CONFIG.FROM[id];
-                if(container.length < 1){
-                    _currPhotoCollector = null; //reset, to avoid stuck in removed circular object
-                }
+
+                //add more advance later
+                _currPhotoCollector = null; //reset, to avoid stuck in removed circular object
+                
                 console.log(id + " removed");
 
                 return true;

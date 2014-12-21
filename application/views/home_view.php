@@ -43,8 +43,9 @@
 			<h5><i class="fa fa-list"></i> Sources </h5>
 			<div class="divider"></div>
 			<div class="form-group">
-				<input type="text" class="form-control small-buffer" id="ADD_SOURCE" placeholder="Enter facebook id">
-				<button type="submit" class="btn btn-primary small-buffer" id="add_source-btn" data-loading-text="checking...">Add Source</button>
+				<input type="text" class="form-control small-buffer" id="ADD_SOURCE" placeholder="facebook username or id">
+				<button type="submit" class="btn btn-primary" id="add_source-btn" data-loading-text="checking...">Add Source</button>
+				<a class="help-block" href="https://www.facebook.com/help/211813265517027" target="_blank" >*what are usernames?</a>
 			</div>
 			<div id="sources"></div>
 		</div>
