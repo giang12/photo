@@ -15,6 +15,11 @@ TO DO:
 * Add In App Chromecast instead of releying on the tab-casting so we can cast from mobile
 * Nice UI Notification System instead of just console.log("monkey loves bananas") -> https://github.com/mouse0270/bootstrap-growl
 * Add more PhotoCollectors (reddit, imgur, tumblr,etc ?)
+* Add 3rd parties credit
 * Add more TO DO
 
+
+3rd parties credit
+=====
+FullScreen background image inspired by http://tympanus.net/Tutorials/CSS3FullscreenSlideshow/index.html demo1
 
